@@ -7,7 +7,7 @@ Minimalist markdown-based wiki builder
 ## Usage
 ```
 cd path/to/base
-miniwiki build
+miniwiki
 ```
 
 ## Preparation
