@@ -81,7 +81,7 @@ async function buildCode(
     <head>
         <title>${navData.title}</title>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-with,initial-scale=1">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
 
         <style>
             body {
