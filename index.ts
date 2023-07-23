@@ -84,28 +84,86 @@ async function buildCode(
         <meta name="viewport" content="width=device-width,initial-scale=1">
 
         <style>
+			:root {
+				--background: white;
+				--nav: #f7f7f7;
+				--hover: #e9e9e9;
+				--text: black;
+				--link: #3d727b;
+
+				--nav-width: 16rem;
+			}
+
+			@media (prefers-color-scheme: dark) {
+				:root {
+					--background: black;
+					--nav: #323232;
+					--hover: #252525;
+					--text: white;
+					--link: #3d727b;
+				}
+			}
+
             body {
                 font-family: sans-serif;
+				background: var(--background);
+				color: var(--text);
             }
 
             nav, main {
-                float: left
+                float: left;
+				width: 100%;
+				box-sizing: border-box;
             }
+
+			@media (min-width: 950px) {
+				nav {
+					width: var(--nav-width);
+				}
+
+				main {
+					width: calc(100% - 2rem - var(--nav-width));
+				}
+			}
 
             nav {
                 margin-right: 2rem;
-                padding: 1rem 2rem;
-                padding-right: 3rem;
+                padding: 1rem;
 
-                background-color: lightgray;
+                background-color: var(--nav);
+
+				border-radius: .5rem;
             }
 
-            a.active {
-                font-weight: bold;
-            }
+			nav li {
+				list-style-type: none;
+				height: auto;
+			}
+
+			a {
+				color: var(--link);
+				text-decoration: none;
+
+				padding: .5rem;
+				box-sizing: border-box;
+				border-radius: .5rem;
+
+				display: block;
+				width: 100%;
+			}
+
+			a.active,
+			a:hover {
+				background: var(--hover);
+			}
+
+			table {
+				width: 100%;
+			}
 
             th, td {
-                border: 1px solid lightgray;
+				background: var(--nav);
+				border-radius: .2rem;
                 padding: .5rem;
             }
         </style>
