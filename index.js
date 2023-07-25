@@ -132,6 +132,13 @@ function buildCode(fileName, navData, allNavData) {
 				height: auto;
 			}
 
+			nav li a {
+				max-width: 100%;
+				overflow: hidden;
+				text-overflow: hidden;
+				white-space: nowrap;
+			}
+
 			a {
 				color: var(--link);
 				text-decoration: none;
