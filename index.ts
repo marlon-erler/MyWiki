@@ -143,7 +143,7 @@ async function buildCode(
 			nav li a {
 				max-width: 100%;
 				overflow: hidden;
-				text-overflow: hidden;
+				text-overflow: ellipsis;
 				white-space: nowrap;
 			}
 
