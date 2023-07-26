@@ -1,6 +1,6 @@
 {
   "name": "mywiki",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Minimalist markdown-based wiki builder",
   "main": "index.js",
   "bin": {
