@@ -145,20 +145,18 @@ async function buildCode(
 				overflow: hidden;
 				text-overflow: ellipsis;
 				white-space: nowrap;
-			}
-
-			a {
-				color: var(--link);
-				text-decoration: none;
-			}
-
-			nav a {
+				
 				padding: .5rem;
 				box-sizing: border-box;
 				border-radius: .5rem;
 
 				display: block;
 				width: 100%;
+			}
+
+			a {
+				color: var(--link);
+				text-decoration: none;
 			}
 
 			a.active,
