@@ -150,7 +150,9 @@ async function buildCode(
 			a {
 				color: var(--link);
 				text-decoration: none;
+			}
 
+			nav a {
 				padding: .5rem;
 				box-sizing: border-box;
 				border-radius: .5rem;
