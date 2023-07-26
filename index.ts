@@ -166,6 +166,7 @@ async function buildCode(
 
 			table {
 				width: 100%;
+				table-layout: fixed;
 			}
 
             th, td {
