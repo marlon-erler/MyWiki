@@ -3,11 +3,13 @@
 import Fs from 'fs/promises';
 import { marked } from 'marked';
 
+// Types
 interface NavData {
     title: string;
     link: string;
 }
 
+// Main
 async function main() {
     //read directory
     const files = (await Fs.readdir('.'))
@@ -16,8 +18,10 @@ async function main() {
         // filter markdown
         .filter((file) => /^(.*)\.md$/.test(file) == true);
 
+	//prepare dist
     await Fs.mkdir('dist', { recursive: true });
 
+	//collect nav data
     const allNavData: NavData[] = [];
     for (const i in files) {
         const file = files[i];
@@ -27,6 +31,7 @@ async function main() {
         };
     }
 
+	//create files
     for (const i in files) {
         const file = files[i];
         const navData = allNavData[i];
@@ -36,26 +41,6 @@ async function main() {
 
         await Fs.writeFile(getPath(htmlName), htmlCode);
     }
-}
-
-function convertName(fileName: string) {
-    return fileName.replace(/.md$/, '.html');
-}
-
-function getPath(fileName: string) {
-    return `dist/${fileName}`;
-}
-
-async function getTitle(fileName: string) {
-    return (await readFile(fileName)).split('\n')[0];
-}
-
-async function readFile(fileName: string) {
-    return await Fs.readFile(fileName, { encoding: 'utf-8' });
-}
-
-function toHTML(markdown: string) {
-    return marked.parse(markdown, { mangle: false, headerIds: false });
 }
 
 async function buildCode(
@@ -188,5 +173,27 @@ async function buildCode(
 </html>
     `;
 }
+
+// Utility
+function convertName(fileName: string) {
+    return fileName.replace(/.md$/, '.html');
+}
+
+function getPath(fileName: string) {
+    return `dist/${fileName}`;
+}
+
+async function getTitle(fileName: string) {
+    return (await readFile(fileName)).split('\n')[0];
+}
+
+async function readFile(fileName: string) {
+    return await Fs.readFile(fileName, { encoding: 'utf-8' });
+}
+
+function toHTML(markdown: string) {
+    return marked.parse(markdown, { mangle: false, headerIds: false });
+}
+
 
 main();
