@@ -11,7 +11,7 @@ interface NavData {
 
 // Main
 async function main() {
-    //read directory
+    //get files
     const items = (await Fs.readdir('.'));
 	const files = [];
 	for (let i = 0; i < items.length; i++) {
@@ -22,6 +22,7 @@ async function main() {
 		// item is a file
 		files.push(item);
 	}
+	
 	const markdownFiles = [];
 	for (let i = 0; i < files.length; i++) {
 		const file = files[i];
@@ -31,57 +32,14 @@ async function main() {
 		// item is markdown file
 		markdownFiles.push(file);
 	}
-
-	//prepare dist
-    await Fs.mkdir('dist', { recursive: true });
-
-	//collect nav data
-    const allNavData: NavData[] = [];
-    for (let i = 0; i < markdownFiles.length; i++) {
-        const file = markdownFiles[i];
-        allNavData[i] = {
-            title: await getTitle(file),
-            link: convertName(file),
-        };
-    }
-
-	//create files
-    for (let i = 0; i < markdownFiles.length; i++) {
-        const file = markdownFiles[i];
-        const navData = allNavData[i];
-
-        const htmlName = convertName(file);
-        const htmlCode = await buildCode(file, navData, allNavData);
-
-        await Fs.writeFile(getPath(htmlName), htmlCode);
-    }
-}
-
-async function buildCode(
-    fileName: string,
-    navData: NavData,
-    allNavData: NavData[],
-) {
-    const markdown = await readFile(fileName);
-    const contentHTML = toHTML(markdown);
-
-    let nav = "";
-	for (let i = 0; i < allNavData.length; i++) {
-		const data = allNavData[i];
-		const navItemString =  `<li><a href="${data.link}" class="${navData.link == data.link ? 'active' : ''}">${data.title}</a></li>\n`
-		nav += navItemString;
+	
+	let header = '';
+	const headerFilePath = 'wiki-header.html';
+	if (files.indexOf(headerFilePath) > -1) {
+		header = await Fs.readFile(headerFilePath, {encoding: 'utf-8'});
 	}
 
-    return `
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>${navData.title}</title>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1">
-
-        <style>
-			:root {
+	let css = `:root {
 				--background: white;
 				--nav: #f7f7f7;
 				--hover: #e9e9e9;
@@ -170,10 +128,71 @@ async function buildCode(
 				background: var(--nav);
 				border-radius: .2rem;
                 padding: .5rem;
-            }
+            }`
+	const cssFilePath = 'wiki-styles.css';
+	if (files.indexOf(cssFilePath) > -1) {
+		css = await Fs.readFile(cssFilePath, {encoding: 'utf-8'});
+	}
+
+	//prepare dist
+    await Fs.mkdir('dist', { recursive: true });
+
+	//collect nav data
+    const allNavData: NavData[] = [];
+    for (let i = 0; i < markdownFiles.length; i++) {
+        const file = markdownFiles[i];
+        allNavData[i] = {
+            title: await getTitle(file),
+            link: convertName(file),
+        };
+    }
+
+	//create files
+    for (let i = 0; i < markdownFiles.length; i++) {
+        const file = markdownFiles[i];
+        const navData = allNavData[i];
+
+        const htmlName = convertName(file);
+        const htmlCode = await buildCode(file, navData, header, css, allNavData);
+
+        await Fs.writeFile(getPath(htmlName), htmlCode);
+    }
+}
+
+async function buildCode(
+    fileName: string,
+    navData: NavData,
+	header: string,
+	css: string,
+    allNavData: NavData[],
+) {
+    const markdown = await readFile(fileName);
+    const contentHTML = toHTML(markdown);
+
+    let nav = "";
+	for (let i = 0; i < allNavData.length; i++) {
+		const data = allNavData[i];
+		const navItemString =  `<li><a href="${data.link}" class="${navData.link == data.link ? 'active' : ''}">${data.title}</a></li>\n`
+		nav += navItemString;
+	}
+
+    return `
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>${navData.title}</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+
+        <style>
+			${css}
         </style>
     </head>
     <body>
+        <header>
+            ${header}
+        </header>
+			
         <nav>
             ${nav}
         </nav>
