@@ -12,19 +12,33 @@ interface NavData {
 // Main
 async function main() {
     //read directory
-    const files = (await Fs.readdir('.'))
-        // filter files
-        .filter(async (item) => (await Fs.stat(item)).isFile() == true)
-        // filter markdown
-        .filter((file) => /^(.*)\.md$/.test(file) == true);
+    const items = (await Fs.readdir('.'));
+	const files = [];
+	for (let i = 0; i < items.length; i++) {
+		const item = items[i];
+		const stat = await Fs.stat(item);
+		if (stat.isFile() == false) continue;
+		
+		// item is a file
+		files.push(item);
+	}
+	const markdownFiles = [];
+	for (let i = 0; i < files.length; i++) {
+		const file = files[i];
+		const isMarkdown = /^(.*)\.md$/.test(file);
+		if (isMarkdown == false) continue;
+		
+		// item is markdown file
+		markdownFiles.push(file);
+	}
 
 	//prepare dist
     await Fs.mkdir('dist', { recursive: true });
 
 	//collect nav data
     const allNavData: NavData[] = [];
-    for (const i in files) {
-        const file = files[i];
+    for (let i = 0; i < markdownFiles.length; i++) {
+        const file = markdownFiles[i];
         allNavData[i] = {
             title: await getTitle(file),
             link: convertName(file),
@@ -32,8 +46,8 @@ async function main() {
     }
 
 	//create files
-    for (const i in files) {
-        const file = files[i];
+    for (let i = 0; i < markdownFiles.length; i++) {
+        const file = markdownFiles[i];
         const navData = allNavData[i];
 
         const htmlName = convertName(file);
@@ -51,14 +65,12 @@ async function buildCode(
     const markdown = await readFile(fileName);
     const contentHTML = toHTML(markdown);
 
-    const nav = allNavData
-        .map(
-            (data) =>
-                `<li><a href="${data.link}" class="${
-                    navData.link == data.link ? 'active' : ''
-                }">${data.title}</a></li>`,
-        )
-        .join('\n');
+    let nav = "";
+	for (let i = 0; i < allNavData.length; i++) {
+		const data = allNavData[i];
+		const navItemString =  `<li><a href="${data.link}" class="${navData.link == data.link ? 'active' : ''}">${data.title}</a></li>\n`
+		nav += navItemString;
+	}
 
     return `
 <!DOCTYPE html>
