@@ -1,25 +1,19 @@
 # MyWiki
-Minimalist markdown-based wiki builder
 
 ## Install
-`npm install -g mywiki`
-
-## Usage
 ```
-cd path/to/base
-miniwiki
+npm install -g mywiki
 ```
 
-## Preparation
-1. Create a base directory. All markdown files must be direct children of this directory.
-2. Write the markdown files
-    - The first line will be the website title
-3. Run the command above. The website will be exported to `./dist/`
+MyWiki is a minimalist wiki builder based on markdown. Here's how it works:
 
-## Example markdown
-```markdown
-Example File
-===
-
-This is an example file for MyWiki.
-```
+1. Create markdown files
+	- All files must be in the exact same directory, no nesting
+	- The first line will be treated as headline, use the `===` headline instead of `#`
+2. Create other files (optional)
+	- `wiki-header.html` will be inserted into the otherwise empty `<header />` tag
+	- `wiki-styles.css` will be used instead of the default theme if the file exists
+3. Build
+	- Run the `mywiki` command in the directory of the files
+4. Done
+	- The generated HTML will be in the `./dist` directory
